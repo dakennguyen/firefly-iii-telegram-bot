@@ -309,26 +309,28 @@ reports:
     📊 <b>Rapporto Mensile per ${period}</b>
       
     <b>💸 Spese per Categoria:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Entrate per Categoria:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Flusso di Cassa:</b> <code>${cashflow}</code>
+    <b>📈 Flusso di Cassa:</b> <code>${cashflow}</code>\n<b>📈 Flusso di Cassa (escl. Risparmi):</b> <code>${cashflowExcludeSavings}</code>
   yearly: >
     📊 <b>Rapporto Annuale per ${period}</b>
       
     <b>💸 Spese per Categoria:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Entrate per Categoria:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Flusso di Cassa:</b> <code>${cashflow}</code>
+    <b>📈 Flusso di Cassa:</b> <code>${cashflow}</code>\n<b>📈 Flusso di Cassa (escl. Risparmi):</b> <code>${cashflowExcludeSavings}</code>
   noData: Nessun dato disponibile
   totalExpense: 'TOTALE: ${total}'
+  totalExpenseExcludeSavings: 'TOTALE (escl. Risparmi): ${total}'
   totalIncome: 'TOTALE: ${total}'
   cashflow: '${amount}'
+  cashflowExcludeSavings: '${amount}'
 
 datePicker:
   selectDate: "Seleziona una data:"

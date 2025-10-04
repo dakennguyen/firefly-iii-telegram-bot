@@ -313,26 +313,28 @@ reports:
     📊 <b>Informe Mensual de ${period}</b>
       
     <b>💸 Gastos por Categoría:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Ingresos por Categoría:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>
+    <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>\n<b>📈 Flujo de Caja (excl. Ahorros):</b> <code>${cashflowExcludeSavings}</code>
   yearly: >
     📊 <b>Informe Anual de ${period}</b>
       
     <b>💸 Gastos por Categoría:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Ingresos por Categoría:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>
+    <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>\n<b>📈 Flujo de Caja (excl. Ahorros):</b> <code>${cashflowExcludeSavings}</code>
   noData: No hay datos disponibles
   totalExpense: 'TOTAL: ${total}'
+  totalExpenseExcludeSavings: 'TOTAL (excl. Ahorros): ${total}'
   totalIncome: 'TOTAL: ${total}'
   cashflow: '${amount}'
+  cashflowExcludeSavings: '${amount}'
 
 datePicker:
   selectDate: "Selecciona una fecha:"

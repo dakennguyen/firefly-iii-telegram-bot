@@ -315,26 +315,28 @@ reports:
     📊 <b>Месячный Отчет за ${period}</b>
       
     <b>💸 Расходы по Категориям:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Доходы по Категориям:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Денежный Поток:</b> <code>${cashflow}</code>
+    <b>📈 Денежный Поток:</b> <code>${cashflow}</code>\n<b>📈 Денежный Поток (искл. Сбережения):</b> <code>${cashflowExcludeSavings}</code>
   yearly: >
     📊 <b>Годовой Отчет за ${period}</b>
       
     <b>💸 Расходы по Категориям:</b>
-    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
       
     <b>💰 Доходы по Категориям:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
       
-    <b>📈 Денежный Поток:</b> <code>${cashflow}</code>
+    <b>📈 Денежный Поток:</b> <code>${cashflow}</code>\n<b>📈 Денежный Поток (искл. Сбережения):</b> <code>${cashflowExcludeSavings}</code>
   noData: Нет доступных данных
   totalExpense: 'ИТОГО: ${total}'
+  totalExpenseExcludeSavings: 'ИТОГО (искл. Сбережения): ${total}'
   totalIncome: 'ИТОГО: ${total}'
   cashflow: '${amount}'
+  cashflowExcludeSavings: '${amount}'
 
 datePicker:
   selectDate: "Выберите дату:"

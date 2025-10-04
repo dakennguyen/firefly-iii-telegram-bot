@@ -177,12 +177,19 @@ function formatCategoryData(entries: InsightGroupEntry[]) {
   return table(data, config)
 }
 
-function calculateTotal(entries: InsightGroupEntry[]): { [currency: string]: number } {
+function calculateTotal(entries: InsightGroupEntry[], excludeSavings: boolean = false): { [currency: string]: number } {
   const log = debug.extend('calculateTotal')
   
   const totals = entries.reduce((acc, entry) => {
     const currency = entry.currency_code || '💲'
     const amount = Math.abs(entry.difference_float || 0)
+    const categoryName = entry.name || ''
+    
+    // Skip "Savings and Investments" category if excludeSavings is true
+    if (excludeSavings && categoryName.toLowerCase().includes('savings')) {
+      log('Excluding category: %O', categoryName)
+      return acc
+    }
     
     if (!acc[currency]) {
       acc[currency] = amount
@@ -221,8 +228,14 @@ function formatReportMessage(
   const expenseTotals = calculateTotal(expenseData)
   const incomeTotals = calculateTotal(incomeData)
   
+  // Calculate totals excluding savings
+  const expenseTotalsExcludeSavings = calculateTotal(expenseData, true)
+  
   const expenseTotal = ctx.i18n.t('reports.totalExpense', { 
     total: formatTotal(expenseTotals) || '0' 
+  })
+  const expenseTotalExcludeSavings = ctx.i18n.t('reports.totalExpenseExcludeSavings', {
+    total: formatTotal(expenseTotalsExcludeSavings) || '0'
   })
   const incomeTotal = ctx.i18n.t('reports.totalIncome', { 
     total: formatTotal(incomeTotals) || '0' 
@@ -255,11 +268,42 @@ function formatReportMessage(
   
   const cashflow = ctx.i18n.t('reports.cashflow', { amount: cashflowStr })
   
+  // Calculate cashflow excluding savings per currency
+  const cashflowExcludeSavingsByCurrency: { [currency: string]: number } = {}
+  
+  // Add income
+  Object.keys(incomeTotals).forEach(currency => {
+    cashflowExcludeSavingsByCurrency[currency] = incomeTotals[currency]
+  })
+  
+  // Subtract expenses (excluding savings)
+  Object.keys(expenseTotalsExcludeSavings).forEach(currency => {
+    if (cashflowExcludeSavingsByCurrency[currency]) {
+      cashflowExcludeSavingsByCurrency[currency] -= expenseTotalsExcludeSavings[currency]
+    } else {
+      cashflowExcludeSavingsByCurrency[currency] = -expenseTotalsExcludeSavings[currency]
+    }
+  })
+  
+  const cashflowExcludeSavingsStr = Object.keys(cashflowExcludeSavingsByCurrency)
+    .map(currency => {
+      const amount = cashflowExcludeSavingsByCurrency[currency]
+      const sign = amount >= 0 ? '+' : ''
+      return `${sign}${amount.toFixed(2)} ${currency}`
+    })
+    .join(', ') || '0'
+  
+  const cashflowExcludeSavings = ctx.i18n.t('reports.cashflowExcludeSavings', { 
+    amount: cashflowExcludeSavingsStr 
+  })
+  
   log('expenses: %O', expenses)
   log('income: %O', income)
   log('expenseTotal: %O', expenseTotal)
+  log('expenseTotalExcludeSavings: %O', expenseTotalExcludeSavings)
   log('incomeTotal: %O', incomeTotal)
   log('cashflow: %O', cashflow)
+  log('cashflowExcludeSavings: %O', cashflowExcludeSavings)
   
   const periodDisplay = reportType === 'yearly' 
     ? dayjs(period).format('YYYY')
@@ -272,7 +316,9 @@ function formatReportMessage(
     expenses: expenses || ctx.i18n.t('reports.noData'),
     income: income || ctx.i18n.t('reports.noData'),
     expenseTotal,
+    expenseTotalExcludeSavings,
     incomeTotal,
-    cashflow
+    cashflow,
+    cashflowExcludeSavings
   })
 }
