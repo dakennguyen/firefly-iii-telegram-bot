@@ -1,7 +1,7 @@
 VERSION 0.7
 
-ARG --global DOCKERHUB_REPO=cyxou/firefly-iii-telegram-bot
-ARG --global DOCKERHUB_USERNAME=cyxou
+ARG --global DOCKERHUB_REPO=dakennguyen/firefly-iii-telegram-bot
+ARG --global DOCKERHUB_USERNAME=dakennguyen
 ARG --global DOCKERHUB_ACCESS_TOKEN
 ARG --global GITHUB_TOKEN
 ARG --global RELEASE_VERSION=latest
@@ -71,7 +71,7 @@ release:
   ARG --required GITHUB_TOKEN
   ARG --required RELEASE_VERSION
   ENV OUT_BASE="./dist"
-  ENV REPO="cyxou/firefly-iii-telegram-bot"
+  ENV REPO="dakennguyen/firefly-iii-telegram-bot"
 
   COPY +buildDist/dist ./dist
 

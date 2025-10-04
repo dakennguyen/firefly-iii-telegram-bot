@@ -1,0 +1,11 @@
+services:
+  firefly-bot:
+    image: dakennguyen/firefly-iii-telegram-bot:latest
+    container_name: firefly_bot
+    env_file: .env
+    volumes:
+      - ./sessions:/home/node/app/sessions
+      - ./certs:/etc/firefly/certs
+    environment:
+      - NODE_EXTRA_CA_CERTS=/etc/firefly/certs/rootCA.pem
+      - TZ=Europe/Berlin
