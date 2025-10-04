@@ -56,20 +56,20 @@ setFireflyAccessToken: '  - *🔑 Access Token* created in Firefly III web inter
 navigateToSettings: To proceed further head over to *🔧 Settings*.
 
 help: >
-  🤖 Please navigate to bot *🔧 Settings* section and set up some stuff for using the bot.   
-      
+  🤖 Please navigate to bot *🔧 Settings* section and set up some stuff for using the bot.
+
   ❕ To add a transaction, send an amount. It can be a number, or a math expression,
   like `100-5*3`.
   Upon receiving amount, bot will ask additional questions for transaction parameters.
-    
+
   You can also add transactions that do not require additional questions from the bot,
   by sending transaction description and an amount, like so
-    
+
   `Cafe 35`
-    
-  In this case a new withdrawal transaction from the default asset account and 
+
+  In this case a new withdrawal transaction from the default asset account and
   description `Cafe` with amount of `35` will be created.
-    
+
   ✨ Going further you can set up different *Rules* in a corresponding section of
   Firefly III, in which case all your bot transactions will be created respecting those
   rules.
@@ -77,8 +77,8 @@ help: >
 common:
   errorOccurred: An error occurred!
   noDefaultSourceAccountExist: |
-    🙈 Whoa! You do not have any Asset accounts to withdraw money from!   
-       
+    🙈 Whoa! You do not have any Asset accounts to withdraw money from!
+
     🙏 Please, navigate to your Firefly III website and create at least one Asset account.
 mdlwr:
   noFireflyURLFound: To work with the bot, you need to specify *🔗 Firefly URL* in bot *🔧 Settings*.
@@ -100,10 +100,10 @@ settings:
     *Options → Profile → OAuth → Create new token*
   defaultAssetAccountSet: Default asset account has been set!
   whatDoYouWantToChange: >
-    🔧 *Settings*  
-       
-    What do you want to change?  
-       
+    🔧 *Settings*
+
+    What do you want to change?
+
     *🔗 Firefly URL*: ${fireflyUrl || '🚨 <NOT SPECIFIED>'}
 
     *🔗 Firefly API URL*: ${fireflyApiUrl || '🚨 <NOT SPECIFIED>'}
@@ -125,8 +125,8 @@ settings:
     Error connecting to Firefly host!
     Please make sure that you specified the right *🔗 Firefly API URL*.
   connectionSuccess: >
-    🎉 Connection established!  
-       
+    🎉 Connection established!
+
     👋 Hi, ${email}!
   badAccessToken: Entered text does not look like an Access Token. Try again, please.
   badUrl: >
@@ -143,90 +143,90 @@ accounts:
     noAccounts: No accounts yet🤷
     asset: >
       Balance of your asset accounts:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     expense: >
       Balance of your expense accounts:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     revenue: >
       Balance of your revenue accounts:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     liability: >
       Balance of your liabilities:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
 
 transactions:
   list:
     withdrawal: >
-      Your withdrawals for <b>${day}</b>:  
-        
+      Your withdrawals for <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     deposit: >
-      Your deposits for <b>${day}</b>:  
-        
+      Your deposits for <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     transfer: >
-      Your transactions for <b>${day}</b>:  
-        
+      Your transactions for <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}</pre>
     noTransactions: 🤷 No transactions
   add:
     dontUnderstand: >
-      🤖 I don't understand that.  
-        
-      Enter a transaction amount, it needs to be a number!  
+      🤖 I don't understand that.
+
+      Enter a transaction amount, it needs to be a number!
 
       Or you may type in a transaction description and an amount, i.e. `Groceries 25`.
     withdrawalMessage: >
-      📆 ${date}  
-        
+      📆 ${date}
+
       📤 Added ${description === 'N/A' ? '' : '*' + description + '*'}
-      *${amount}* *${currency}*${category ? ' to category *' + category + '*' : ''}  
+      *${amount}* *${currency}*${category ? ' to category *' + category + '*' : ''}
 
       ${source} → ${destination}
     depositMessage: >
-      📆 ${date}  
-       
+      📆 ${date}
+
       📥 Added ${description === 'N/A' ? '' : '*' + description + '* '}
       *${amount}* *${currency}*${category ? ' to category *' + category + '*' : ''}
-      
+
       from ${source} → ${destination}
     transferMessage: >
-      📆 ${date}  
-         
+      📆 ${date}
+
       ↔️ Transfer *${amount}* *${currency}* from account *${source}* to account *${destination}*${foreignAmount ? " (" + foreignAmount + " " + foreignCurrencySymbol + ")" : ''}${category ? ' to category *' + category + '*' : ''}
     selectCategory: In which category to add *${amount}*?
     noCategoriesYet: |
       🤷 You haven't created any categories yet.
       The transaction will be created without a category. Continue?
-            
+
       💡 You can ceasily create new categories from a corresponding *🔖 Categories* bot button.
     transactionDeleted: Transaction deleted!
     couldNotDelete: 'Could not delete transaction by id: ${id}'
@@ -238,11 +238,11 @@ transactions:
     created: Transaction created!
     typeForeignAmount: >
       ⚠️ The destination account currency (*${destCurrency}*) is different than the source account currency (*${sourceCurrency}*)!
-      Type in the foreign amount i.e. the amount in the destination account currency.  
-        
+      Type in the foreign amount i.e. the amount in the destination account currency.
+
       💡 You can use the arithmetic signs for addition, subtraction, multiplication and division to
-      perform the appropriate operation on the source account amount of the transaction.  
-        
+      perform the appropriate operation on the source account amount of the transaction.
+
       For example, `*15` would multiply the initial amount by 15 to get the foreign amount.
 
   edit:
@@ -258,7 +258,7 @@ transactions:
       For example, "+35" would add 35 to existing amount of transaction.
     noCategoriesYet: |
       🤷 You haven't created any categories yet.
-            
+
       💡 You can easily create new categories from a corresponding *🔖 Categories* bot button.
     typeNewDescription: 'Type in new description:'
     typeNewDate: 'Select a new date for the transaction:'
@@ -276,22 +276,22 @@ categories:
     To view transactions for a specific category, choose it from the list bellow.
     You can also rename or delete a category once it is chosen.
   typeCategories: >
-    Type in your new categories so that each one would be on a separate line, for example: 
-       
+    Type in your new categories so that each one would be on a separate line, for example:
+
     💡 Utilities
 
     👕 Clothes and shoes
 
-    🥦 Groceries  
-       
+    🥦 Groceries
+
     *P.S.*: Category names can be changed later.
 
     *P.P.S.*: It's OK if a category with the same name already exists.
   confirmCreation: >
-    ${categories.length} new category(s) will be created:   
-       
-    ${categories.join('\n')}  
-       
+    ${categories.length} new category(s) will be created:
+
+    ${categories.join('\n')}
+
     Is that OK?
   typeNewName: 'Type in new category name:'
   confirmDeletion: >
@@ -300,38 +300,38 @@ categories:
   deleted: Category deleted!
   noTransactions: No transactions
   transactionsList: >
-    <b>${categoryName}</b> withdrawals for the month of <b>${monthName}</b>:  
-      
+    <b>${categoryName}</b> withdrawals for the month of <b>${monthName}</b>:
+
     <pre>${transactions.replace(/\n$/, '')}
-    
+
     ──────────────────
-    
+
     SUM: ${sums ? sums : '0'}</pre>
 
 reports:
   notImplemented: Sorry, but reports are not implemented yet 😞
   monthly: >
     📊 <b>Monthly Report for ${period}</b>
-      
+
     <b>💸 Expenses by Category:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
-      
+
     <b>💰 Income by Category:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
-      
+
     <b>📈 Cashflow:</b> <code>${cashflow}</code>\n<b>📈 Cashflow (excl. Savings):</b> <code>${cashflowExcludeSavings}</code>
   yearly: >
     📊 <b>Yearly Report for ${period}</b>
-      
+
     <b>💸 Expenses by Category:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
-      
+
     <b>💰 Income by Category:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
-      
+
     <b>📈 Cashflow:</b> <code>${cashflow}</code>\n<b>📈 Cashflow (excl. Savings):</b> <code>${cashflowExcludeSavings}</code>
   noData: No data available
-  totalExpense: 'TOTAL: ${total}'
+  totalExpense: 'TOTAL                : ${total}'
   totalExpenseExcludeSavings: 'TOTAL (excl. Savings): ${total}'
   totalIncome: 'TOTAL: ${total}'
   cashflow: '${amount}'

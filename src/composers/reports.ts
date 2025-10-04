@@ -35,7 +35,7 @@ async function showReport(ctx: MyContext) {
 
     let period: string
     let reportType: ReportType
-    
+
     // Check if it is a callback query or a regular message
     if (isRegularMessage) {
       period = dayjs().format('YYYY-MM')
@@ -49,7 +49,7 @@ async function showReport(ctx: MyContext) {
 
     let startDate: string
     let endDate: string
-    
+
     if (reportType === 'yearly') {
       startDate = dayjs(period).startOf('year').format('YYYY-MM-DD')
       endDate = dayjs(period).endOf('year').format('YYYY-MM-DD')
@@ -100,17 +100,17 @@ function createReportNavigationKeyboard(
   ctx: MyContext, currentPeriod: string, reportType: ReportType
 ): InlineKeyboard {
   const log = debug.extend('createReportNavigationKeyboard')
-  
+
   const keyboard = new InlineKeyboard()
-  
+
   if (reportType === 'yearly') {
     const prevYear = dayjs(currentPeriod).subtract(1, 'year')
     const prevYearName = prevYear.format('YYYY')
     const nextYear = dayjs(currentPeriod).add(1, 'year')
     const nextYearName = nextYear.format('YYYY')
-    
+
     log('prevYearName: %O, nextYearName: %O', prevYearName, nextYearName)
-    
+
     keyboard
       .text(
         `<< ${prevYearName}`,
@@ -129,9 +129,9 @@ function createReportNavigationKeyboard(
     const prevMonthName = prevMonth.format('MMM YYYY')
     const nextMonth = dayjs(currentPeriod).add(1, 'month')
     const nextMonthName = nextMonth.format('MMM YYYY')
-    
+
     log('prevMonthName: %O, nextMonthName: %O', prevMonthName, nextMonthName)
-    
+
     keyboard
       .text(
         `<< ${prevMonthName}`,
@@ -146,7 +146,7 @@ function createReportNavigationKeyboard(
         mapper.list.template({ period: currentPeriod, type: 'yearly' })
       ).row()
   }
-  
+
   keyboard.text(ctx.i18n.t('labels.DONE'), mapper.close.template())
 
   return keyboard
@@ -154,15 +154,21 @@ function createReportNavigationKeyboard(
 
 function formatCategoryData(entries: InsightGroupEntry[]) {
   const log = debug.extend('formatCategoryData')
-  
+
   if (entries.length === 0) return ''
 
-  const data = entries.map(entry => {
-    const amount = Math.abs(entry.difference_float || 0).toFixed(2)
-    const currency = entry.currency_code || '💲'
-    const name = entry.name || 'Unknown'
-    return [ name, `${amount} ${currency}` ]
-  })
+  const data = entries
+    .sort((a, b) => {
+      const amountA = Math.abs(a.difference_float || 0)
+      const amountB = Math.abs(b.difference_float || 0)
+      return amountB - amountA
+    })
+    .map(entry => {
+      const amount = Math.abs(entry.difference_float || 0).toFixed(2)
+      const currency = entry.currency_code || '💲'
+      const name = entry.name || 'Unknown'
+      return [ name, `${amount} ${currency}` ]
+    })
 
   const config = {
     border: getBorderCharacters('void'),
@@ -179,27 +185,27 @@ function formatCategoryData(entries: InsightGroupEntry[]) {
 
 function calculateTotal(entries: InsightGroupEntry[], excludeSavings: boolean = false): { [currency: string]: number } {
   const log = debug.extend('calculateTotal')
-  
+
   const totals = entries.reduce((acc, entry) => {
     const currency = entry.currency_code || '💲'
     const amount = Math.abs(entry.difference_float || 0)
     const categoryName = entry.name || ''
-    
+
     // Skip "Savings and Investments" category if excludeSavings is true
     if (excludeSavings && categoryName.toLowerCase().includes('savings')) {
       log('Excluding category: %O', categoryName)
       return acc
     }
-    
+
     if (!acc[currency]) {
       acc[currency] = amount
     } else {
       acc[currency] += amount
     }
-    
+
     return acc
   }, {} as { [currency: string]: number })
-  
+
   log('totals: %O', totals)
   return totals
 }
@@ -214,41 +220,41 @@ function formatTotal(totals: { [currency: string]: number }): string {
 }
 
 function formatReportMessage(
-  ctx: MyContext, 
+  ctx: MyContext,
   period: string,
   reportType: ReportType,
-  expenseData: InsightGroupEntry[], 
+  expenseData: InsightGroupEntry[],
   incomeData: InsightGroupEntry[]
 ) {
   const log = debug.extend('formatReportMessage')
-  
+
   const expenses = formatCategoryData(expenseData)
   const income = formatCategoryData(incomeData)
-  
+
   const expenseTotals = calculateTotal(expenseData)
   const incomeTotals = calculateTotal(incomeData)
-  
+
   // Calculate totals excluding savings
   const expenseTotalsExcludeSavings = calculateTotal(expenseData, true)
-  
-  const expenseTotal = ctx.i18n.t('reports.totalExpense', { 
-    total: formatTotal(expenseTotals) || '0' 
+
+  const expenseTotal = ctx.i18n.t('reports.totalExpense', {
+    total: formatTotal(expenseTotals) || '0'
   })
   const expenseTotalExcludeSavings = ctx.i18n.t('reports.totalExpenseExcludeSavings', {
     total: formatTotal(expenseTotalsExcludeSavings) || '0'
   })
-  const incomeTotal = ctx.i18n.t('reports.totalIncome', { 
-    total: formatTotal(incomeTotals) || '0' 
+  const incomeTotal = ctx.i18n.t('reports.totalIncome', {
+    total: formatTotal(incomeTotals) || '0'
   })
-  
+
   // Calculate cashflow per currency
   const cashflowByCurrency: { [currency: string]: number } = {}
-  
+
   // Add income
   Object.keys(incomeTotals).forEach(currency => {
     cashflowByCurrency[currency] = incomeTotals[currency]
   })
-  
+
   // Subtract expenses
   Object.keys(expenseTotals).forEach(currency => {
     if (cashflowByCurrency[currency]) {
@@ -257,7 +263,7 @@ function formatReportMessage(
       cashflowByCurrency[currency] = -expenseTotals[currency]
     }
   })
-  
+
   const cashflowStr = Object.keys(cashflowByCurrency)
     .map(currency => {
       const amount = cashflowByCurrency[currency]
@@ -265,17 +271,17 @@ function formatReportMessage(
       return `${sign}${amount.toFixed(2)} ${currency}`
     })
     .join(', ') || '0'
-  
+
   const cashflow = ctx.i18n.t('reports.cashflow', { amount: cashflowStr })
-  
+
   // Calculate cashflow excluding savings per currency
   const cashflowExcludeSavingsByCurrency: { [currency: string]: number } = {}
-  
+
   // Add income
   Object.keys(incomeTotals).forEach(currency => {
     cashflowExcludeSavingsByCurrency[currency] = incomeTotals[currency]
   })
-  
+
   // Subtract expenses (excluding savings)
   Object.keys(expenseTotalsExcludeSavings).forEach(currency => {
     if (cashflowExcludeSavingsByCurrency[currency]) {
@@ -284,7 +290,7 @@ function formatReportMessage(
       cashflowExcludeSavingsByCurrency[currency] = -expenseTotalsExcludeSavings[currency]
     }
   })
-  
+
   const cashflowExcludeSavingsStr = Object.keys(cashflowExcludeSavingsByCurrency)
     .map(currency => {
       const amount = cashflowExcludeSavingsByCurrency[currency]
@@ -292,11 +298,11 @@ function formatReportMessage(
       return `${sign}${amount.toFixed(2)} ${currency}`
     })
     .join(', ') || '0'
-  
-  const cashflowExcludeSavings = ctx.i18n.t('reports.cashflowExcludeSavings', { 
-    amount: cashflowExcludeSavingsStr 
+
+  const cashflowExcludeSavings = ctx.i18n.t('reports.cashflowExcludeSavings', {
+    amount: cashflowExcludeSavingsStr
   })
-  
+
   log('expenses: %O', expenses)
   log('income: %O', income)
   log('expenseTotal: %O', expenseTotal)
@@ -304,13 +310,13 @@ function formatReportMessage(
   log('incomeTotal: %O', incomeTotal)
   log('cashflow: %O', cashflow)
   log('cashflowExcludeSavings: %O', cashflowExcludeSavings)
-  
-  const periodDisplay = reportType === 'yearly' 
+
+  const periodDisplay = reportType === 'yearly'
     ? dayjs(period).format('YYYY')
     : dayjs(period).format('MMMM YYYY')
-  
+
   const translationKey = reportType === 'yearly' ? 'reports.yearly' : 'reports.monthly'
-  
+
   return ctx.i18n.t(translationKey, {
     period: periodDisplay,
     expenses: expenses || ctx.i18n.t('reports.noData'),

@@ -25,7 +25,7 @@ labels:
   EDIT_TRANSACTION: ✏️ Editar
   FIREFLY_ACCESS_TOKEN_BUTTON: 🔑 Token de Acceso
   FIREFLY_URL_BUTTON: 🔗 URL de Firefly
-  FIREFLY_API_URL_BUTTON: 🔗 URL de la API Firefly											  
+  FIREFLY_API_URL_BUTTON: 🔗 URL de la API Firefly
   LIST_TAGS: 🏷️  Etiqueta
   RENAME_CATEGORY: ✏️ Renombrar
   REPORTS: 📈 Reportes
@@ -38,7 +38,7 @@ labels:
   SHOW_TRANSFERS: ↔️ Transferencias
   SHOW_WITHDRAWALS: 📤 Gastos
   SHOW_MONTHLY: 📅 Vista Mensual
-  SHOW_YEARLY: 📆 Vista Anual					  
+  SHOW_YEARLY: 📆 Vista Anual
   TRANSACTIONS: 🔀 Transacciones
   YES: ✅ Sí
   SWITCH_LANG: 🌐 Idioma
@@ -56,17 +56,17 @@ setFireflyAccessToken: '  - *🔑 Token de Acceso* Creado en la interface web de
 navigateToSettings: 'Para continuar el proceso, ve a *🔧 Configuración*.'
 
 help: >
-  🤖 Por favor, ve a la sección de *🔧 Configuración* del bot y configura los requisitos para empezar a usar el bot.   
-      
+  🤖 Por favor, ve a la sección de *🔧 Configuración* del bot y configura los requisitos para empezar a usar el bot.
+
   ❕ Para agregar una transacción, Primero envía un monto o importe. Debe ser un número, o una expresión matemática,
   por ejemplo `100-5*3`.
   Una vez recibido el monto o importe, el bot pedirá datos adicionales para los parámetros de la transacción.
-    
+
   También puedes agregar transacciones que no requieren datos adicionales,
   enviando la descripción y el importe, por ejemplo
-    
+
   `Cafe 35`
-    
+
   En este caso, se creará un nuevo retiro de la cuenta de activo por defecto
   con la descripción `Cafe` por un importe de `35`
 
@@ -77,8 +77,8 @@ help: >
 common:
   errorOccurred: Ha ocurrido un ERROR!
   noDefaultSourceAccountExist: |
-    🙈 Recórcholis! No tienes ninguna cuenta de Activo de donde sacar dinero!  
-       
+    🙈 Recórcholis! No tienes ninguna cuenta de Activo de donde sacar dinero!
+
     🙏 Por favor, ve a tu página de Firefly III y crea al menos una cuenta de Activo.
 mdlwr:
   noFireflyURLFound: Para usar el bot, necesitas indicar una *🔗 URL de Firefly* válida en la *🔧 Configuración* del Bot.
@@ -100,12 +100,12 @@ settings:
     *Opciones → Perfil →  OAuth → Crear nuevo token*
   defaultAssetAccountSet: La cuenta de Activo por defecto ha sido configurada!
   whatDoYouWantToChange: >
-    🔧 *Configuración*  
-       
-    Que te gustaría modificar?  
-       
+    🔧 *Configuración*
+
+    Que te gustaría modificar?
+
     *🔗 URL de Firefly*: ${fireflyUrl || '🚨 <NO ESPECIFICADO>'}
-      
+
     *🔗 URL de Firefly API*: ${fireflyApiUrl || '🚨 <NO ESPECIFICADO>'}
 
     *🔑 Token de Acceso*: ${accessToken || '🚨 <NO ESPECIFICADO>'}
@@ -141,90 +141,90 @@ accounts:
     noAccounts: No hay cuentas🤷
     asset: >
       Saldo de tus cuentas de Activos:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     expense: >
       Saldo de tus cuentas de Gastos:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     revenue: >
       Saldo de tus cuentas de Ingresos:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     liability: >
       Saldo de tus cuentas de Pasivo:
-       
+
       <pre>${accounts.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
 
 transactions:
   list:
     withdrawal: >
-      Tus Gastos al <b>${day}</b>:  
-        
+      Tus Gastos al <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     deposit: >
-      Tus Depósitos al <b>${day}</b>:  
-        
+      Tus Depósitos al <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}
-      
+
       ──────────────────
-      
+
       SUM: ${sums ? sums : '0'}</pre>
     transfer: >
-      Tus Transacciones al <b>${day}</b>:  
-        
+      Tus Transacciones al <b>${day}</b>:
+
       <pre>${transactions.replace(/\n$/, '')}</pre>
     noTransactions: 🤷 No hay transacciones
   add:
     dontUnderstand: >
       🤖 No entendí esto.
-        
+
       Ingresa un importe para la transacción, debe ser un número! 😉
-        
+
       O, puedes ingresar la description e importe de la transacción, ejemplo, `Comida 25`
     withdrawalMessage: >
-      📆 ${date}  
-        
+      📆 ${date}
+
       📤 Añadido ${description === 'N/A' ? '' : '*' + description + '*'}
-      *${amount}* *${currency}*${category ? ' a la categoría *' + category + '*' : ''}  
+      *${amount}* *${currency}*${category ? ' a la categoría *' + category + '*' : ''}
 
       ${source} ➡️ ${destination}
     depositMessage: >
-      📆 ${date}  
-       
+      📆 ${date}
+
       📥 Añadido ${description === 'N/A' ? '' : '*' + description + '* '}
       *${amount}* *${currency}*${category ? ' a la categoría *' + category + '*' : ''}
-      
+
       de ${source} → ${destination}
     transferMessage: >
-      📆 ${date}  
-         
+      📆 ${date}
+
       ↔️ Trasnferencia *${amount}* *${currency}* desde  *${source}* to account *${destination}*${foreignAmount ? " (" + foreignAmount + " " + foreignCurrencySymbol + ")" : ''}${category ? ' to category *' + category + '*' : ''}
     selectCategory: A cual Categoría añadir *${amount}*?
     noCategoriesYet: |
       🤷 Aún no has creado ninguna Categoría.
       La transacción será creada sin Categoría. Seguir?
-            
+
       💡 Puedes crear Categorías fácilmente, usando el botón *🔖 Categorias*.
     transactionDeleted: Transacción eliminada!
     couldNotDelete: 'No se pudo eliminar la transacción con el id: ${id}'
@@ -237,10 +237,10 @@ transactions:
     typeForeignAmount: >
       ⚠️ La moneda de la cuenta destino (*${destCurrency}*) es diferente a la moneda de la cuenta origen (*${sourceCurrency}*)!
       Ingresa el importe en moneda foránea, ejemplo, el importe en la moneda de la cuenta destino.
-            
+
       💡 Puedes usar los signos aritméticos para sumar, restar, multiplicar o dividir
       para realizar la operacion deseada en la cuenta origen de la transacción.
-          
+
       Por ejemplo, `*15` puede multiplicar el importe inicial por 15 para obtener el importe en moneda foranea (donde 15 es el tipo de cambio).
 
   edit:
@@ -256,7 +256,7 @@ transactions:
       Por ejemplo, "+35" sumará 35 al importe existente de la transacción.
     noCategoriesYet: |
       🤷 Aún no has creado ninguna Categoría.
-            
+
       💡 Puedes agregar nuevas Categorías fácilmente usando el boton *🔖 Categorias* del bot.
     typeNewDescription: 'Ingresa una nueva Descripción:'
     typeNewDate: 'Selecciona una nueva fecha para la transacción:'
@@ -275,21 +275,21 @@ categories:
     También puedes renombrar o borrar una categoría una vez que haya sido seleccionada.
   typeCategories: >
     Ingresa tus nuevas Categorías, de tal manera que cada una esté en una línea por separado, por ejemplo:
-       
+
     💡 Servicios
 
     👕 Ropa y Calzado
 
-    🥦 Comida  
-       
+    🥦 Comida
+
     *Postdata*: Los nombres de las Categorías se pueden cambiar posteriormente.
 
     *Post-Postdata*: No hay problema si ya existe una Categoría con ese nombre.
   confirmCreation: >
-    ${categories.length} nueva(s) Categoría(s) serán creadas:   
-       
-    ${categories.join('\n')}  
-       
+    ${categories.length} nueva(s) Categoría(s) serán creadas:
+
+    ${categories.join('\n')}
+
     Está bien?
   typeNewName: 'Ingresa el nuevo nombre del a Categoría:'
   confirmDeletion: >
@@ -298,12 +298,12 @@ categories:
   deleted: Categoría eliminada!
   noTransactions: Sin transacciones
   transactionsList: >
-    <b>${categoryName}</b> Gastos del mes de <b>${monthName}</b>:  
-      
+    <b>${categoryName}</b> Gastos del mes de <b>${monthName}</b>:
+
     <pre>${transactions.replace(/\n$/, '')}
-    
+
     ──────────────────
-    
+
     SUM: ${sums ? sums : '0'}</pre>
 
 
@@ -311,26 +311,26 @@ reports:
   notImplemented: Disculpe, pero los Reportes aún no se han implementado 😞
   monthly: >
     📊 <b>Informe Mensual de ${period}</b>
-      
+
     <b>💸 Gastos por Categoría:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
-      
+
     <b>💰 Ingresos por Categoría:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
-      
+
     <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>\n<b>📈 Flujo de Caja (excl. Ahorros):</b> <code>${cashflowExcludeSavings}</code>
   yearly: >
     📊 <b>Informe Anual de ${period}</b>
-      
+
     <b>💸 Gastos por Categoría:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}\n${expenseTotalExcludeSavings}</pre>
-      
+
     <b>💰 Ingresos por Categoría:</b>
     <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
-      
+
     <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>\n<b>📈 Flujo de Caja (excl. Ahorros):</b> <code>${cashflowExcludeSavings}</code>
   noData: No hay datos disponibles
-  totalExpense: 'TOTAL: ${total}'
+  totalExpense: 'TOTAL                : ${total}'
   totalExpenseExcludeSavings: 'TOTAL (excl. Ahorros): ${total}'
   totalIncome: 'TOTAL: ${total}'
   cashflow: '${amount}'
