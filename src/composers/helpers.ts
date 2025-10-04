@@ -50,7 +50,7 @@ const listTransactionsMapper = {
 }
 
 const reportsMapper = {
-  list: new Mapper('REPORTS|MONTH=${month}'),
+  list: new Mapper('REPORTS|PERIOD=${period}&TYPE=${type}'),
   close: new Mapper('REPORTS|DONE'),
 }
 

@@ -36,7 +36,9 @@ labels:
   TO_TRANSFERS: ↔️ Nueva transferencia
   SHOW_DEPOSITS: 📥 Depósito
   SHOW_TRANSFERS: ↔️ Transferencias
-  SHOW_WITHDRAWALS: 📤 Gastos					  
+  SHOW_WITHDRAWALS: 📤 Gastos
+  SHOW_MONTHLY: 📅 Vista Mensual
+  SHOW_YEARLY: 📆 Vista Anual					  
   TRANSACTIONS: 🔀 Transacciones
   YES: ✅ Sí
   SWITCH_LANG: 🌐 Idioma
@@ -308,7 +310,17 @@ categories:
 reports:
   notImplemented: Disculpe, pero los Reportes aún no se han implementado 😞
   monthly: >
-    📊 <b>Informe Mensual de ${month}</b>
+    📊 <b>Informe Mensual de ${period}</b>
+      
+    <b>💸 Gastos por Categoría:</b>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+      
+    <b>💰 Ingresos por Categoría:</b>
+    <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
+      
+    <b>📈 Flujo de Caja:</b> <code>${cashflow}</code>
+  yearly: >
+    📊 <b>Informe Anual de ${period}</b>
       
     <b>💸 Gastos por Categoría:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>

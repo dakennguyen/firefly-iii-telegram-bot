@@ -12,6 +12,8 @@ import { InsightGroupEntry } from '../lib/firefly/model/insight-group-entry'
 
 const debug = Debug(`bot:reports`)
 
+type ReportType = 'monthly' | 'yearly'
+
 const bot = new Composer<MyContext>()
 
 for (const locale of locales) {
@@ -31,19 +33,30 @@ async function showReport(ctx: MyContext) {
     log('isRegularMessage: %O', isRegularMessage)
     log('ctx.match: %O', ctx.match)
 
-    let month: string
+    let period: string
+    let reportType: ReportType
     
     // Check if it is a callback query or a regular message
     if (isRegularMessage) {
-      month = dayjs().format('YYYY-MM')
+      period = dayjs().format('YYYY-MM')
+      reportType = 'monthly'
     } else {
       await ctx.answerCallbackQuery()
-      month = ctx.match![1]
+      period = ctx.match![1]
+      reportType = ctx.match![2] as ReportType
     }
-    log('month: %O', month)
+    log('period: %O, reportType: %O', period, reportType)
 
-    const startDate = dayjs(month).startOf('month').format('YYYY-MM-DD')
-    const endDate = dayjs(month).endOf('month').format('YYYY-MM-DD')
+    let startDate: string
+    let endDate: string
+    
+    if (reportType === 'yearly') {
+      startDate = dayjs(period).startOf('year').format('YYYY-MM-DD')
+      endDate = dayjs(period).endOf('year').format('YYYY-MM-DD')
+    } else {
+      startDate = dayjs(period).startOf('month').format('YYYY-MM-DD')
+      endDate = dayjs(period).endOf('month').format('YYYY-MM-DD')
+    }
     log('startDate: %O, endDate: %O', startDate, endDate)
 
     // Fetch expense and income data in parallel
@@ -55,8 +68,8 @@ async function showReport(ctx: MyContext) {
     log('expenseData: %O', expenseData.data)
     log('incomeData: %O', incomeData.data)
 
-    const keyboard = createReportNavigationKeyboard(ctx, month)
-    const text = formatReportMessage(ctx, month, expenseData.data, incomeData.data)
+    const keyboard = createReportNavigationKeyboard(ctx, period, reportType)
+    const text = formatReportMessage(ctx, period, reportType, expenseData.data, incomeData.data)
 
     if (isRegularMessage) {
       return ctx.reply(text, {
@@ -84,26 +97,57 @@ async function closeHandler(ctx: MyContext) {
 }
 
 function createReportNavigationKeyboard(
-  ctx: MyContext, currentMonth: string
+  ctx: MyContext, currentPeriod: string, reportType: ReportType
 ): InlineKeyboard {
   const log = debug.extend('createReportNavigationKeyboard')
-  const prevMonth = dayjs(currentMonth).subtract(1, 'month')
-  const prevMonthName = prevMonth.format('MMM YYYY')
-  log('prevMonthName: %O', prevMonthName)
-  const nextMonth = dayjs(currentMonth).add(1, 'month')
-  const nextMonthName = nextMonth.format('MMM YYYY')
-  log('nextMonthName: %O', nextMonthName)
-
+  
   const keyboard = new InlineKeyboard()
-    .text(
-      `<< ${prevMonthName}`,
-      mapper.list.template({ month: prevMonth.format('YYYY-MM') })
-    )
-    .text(
-      `${nextMonthName} >>`,
-      mapper.list.template({ month: nextMonth.format('YYYY-MM') })
-    ).row()
-    .text(ctx.i18n.t('labels.DONE'), mapper.close.template())
+  
+  if (reportType === 'yearly') {
+    const prevYear = dayjs(currentPeriod).subtract(1, 'year')
+    const prevYearName = prevYear.format('YYYY')
+    const nextYear = dayjs(currentPeriod).add(1, 'year')
+    const nextYearName = nextYear.format('YYYY')
+    
+    log('prevYearName: %O, nextYearName: %O', prevYearName, nextYearName)
+    
+    keyboard
+      .text(
+        `<< ${prevYearName}`,
+        mapper.list.template({ period: prevYear.format('YYYY-MM'), type: 'yearly' })
+      )
+      .text(
+        `${nextYearName} >>`,
+        mapper.list.template({ period: nextYear.format('YYYY-MM'), type: 'yearly' })
+      ).row()
+      .text(
+        ctx.i18n.t('labels.SHOW_MONTHLY'),
+        mapper.list.template({ period: currentPeriod, type: 'monthly' })
+      ).row()
+  } else {
+    const prevMonth = dayjs(currentPeriod).subtract(1, 'month')
+    const prevMonthName = prevMonth.format('MMM YYYY')
+    const nextMonth = dayjs(currentPeriod).add(1, 'month')
+    const nextMonthName = nextMonth.format('MMM YYYY')
+    
+    log('prevMonthName: %O, nextMonthName: %O', prevMonthName, nextMonthName)
+    
+    keyboard
+      .text(
+        `<< ${prevMonthName}`,
+        mapper.list.template({ period: prevMonth.format('YYYY-MM'), type: 'monthly' })
+      )
+      .text(
+        `${nextMonthName} >>`,
+        mapper.list.template({ period: nextMonth.format('YYYY-MM'), type: 'monthly' })
+      ).row()
+      .text(
+        ctx.i18n.t('labels.SHOW_YEARLY'),
+        mapper.list.template({ period: currentPeriod, type: 'yearly' })
+      ).row()
+  }
+  
+  keyboard.text(ctx.i18n.t('labels.DONE'), mapper.close.template())
 
   return keyboard
 }
@@ -164,7 +208,8 @@ function formatTotal(totals: { [currency: string]: number }): string {
 
 function formatReportMessage(
   ctx: MyContext, 
-  month: string, 
+  period: string,
+  reportType: ReportType,
   expenseData: InsightGroupEntry[], 
   incomeData: InsightGroupEntry[]
 ) {
@@ -216,8 +261,14 @@ function formatReportMessage(
   log('incomeTotal: %O', incomeTotal)
   log('cashflow: %O', cashflow)
   
-  return ctx.i18n.t('reports.monthly', {
-    month: dayjs(month).format('MMMM YYYY'),
+  const periodDisplay = reportType === 'yearly' 
+    ? dayjs(period).format('YYYY')
+    : dayjs(period).format('MMMM YYYY')
+  
+  const translationKey = reportType === 'yearly' ? 'reports.yearly' : 'reports.monthly'
+  
+  return ctx.i18n.t(translationKey, {
+    period: periodDisplay,
     expenses: expenses || ctx.i18n.t('reports.noData'),
     income: income || ctx.i18n.t('reports.noData'),
     expenseTotal,

@@ -37,6 +37,8 @@ labels:
   SHOW_DEPOSITS: 📥 Deposits
   SHOW_TRANSFERS: ↔️ Transfers
   SHOW_WITHDRAWALS: 📤 Withdrawals
+  SHOW_MONTHLY: 📅 Monthly View
+  SHOW_YEARLY: 📆 Yearly View
   TRANSACTIONS: 🔀 Transactions
   YES: ✅ Yes
   SWITCH_LANG: 🌐 Language
@@ -309,7 +311,17 @@ categories:
 reports:
   notImplemented: Sorry, but reports are not implemented yet 😞
   monthly: >
-    📊 <b>Monthly Report for ${month}</b>
+    📊 <b>Monthly Report for ${period}</b>
+      
+    <b>💸 Expenses by Category:</b>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+      
+    <b>💰 Income by Category:</b>
+    <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
+      
+    <b>📈 Cashflow:</b> <code>${cashflow}</code>
+  yearly: >
+    📊 <b>Yearly Report for ${period}</b>
       
     <b>💸 Expenses by Category:</b>
     <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
