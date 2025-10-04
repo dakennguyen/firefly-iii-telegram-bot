@@ -308,6 +308,20 @@ categories:
 
 reports:
   notImplemented: Sorry, but reports are not implemented yet 😞
+  monthly: >
+    📊 <b>Monthly Report for ${month}</b>
+      
+    <b>💸 Expenses by Category:</b>
+    <pre>${expenses.replace(/\n$/, '')}${expenses ? '\n──────────────────\n' : ''}${expenseTotal}</pre>
+      
+    <b>💰 Income by Category:</b>
+    <pre>${income.replace(/\n$/, '')}${income ? '\n──────────────────\n' : ''}${incomeTotal}</pre>
+      
+    <b>📈 Cashflow:</b> <code>${cashflow}</code>
+  noData: No data available
+  totalExpense: 'TOTAL: ${total}'
+  totalIncome: 'TOTAL: ${total}'
+  cashflow: '${amount}'
 
 datePicker:
   selectDate: "Select a date:"

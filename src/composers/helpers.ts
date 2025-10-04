@@ -25,6 +25,7 @@ export {
   createAccountsMenuKeyboard,
   listAccountsMapper,
   listTransactionsMapper,
+  reportsMapper,
   parseAmountInput,
   formatTransactionText as formatTransaction,
   formatTransactionUpdate,
@@ -46,6 +47,11 @@ const listAccountsMapper = {
 const listTransactionsMapper = {
   list: new Mapper('LIST_TRANSACTIONS|TYPE=${type}&START=${start}'),
   close: new Mapper('LIST_TRANSACTIONS|DONE'),
+}
+
+const reportsMapper = {
+  list: new Mapper('REPORTS|MONTH=${month}'),
+  close: new Mapper('REPORTS|DONE'),
 }
 
 function parseAmountInput(amount: string, oldAmount?: string): number | null {
